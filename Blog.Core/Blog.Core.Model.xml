@@ -715,11 +715,12 @@
             修改时间
             </summary>
         </member>
-        <member name="M:Blog.Core.Model.Models.DBSeed.SeedAsync(Blog.Core.Model.Models.MyContext)">
+        <member name="M:Blog.Core.Model.Models.DBSeed.SeedAsync(Blog.Core.Model.Models.MyContext,System.String)">
             <summary>
             异步添加种子数据
             </summary>
             <param name="myContext"></param>
+            <param name="WebRootPath"></param>
             <returns></returns>
         </member>
         <member name="M:Blog.Core.Model.Models.FrameSeed.CreateModels(Blog.Core.Model.Models.MyContext)">
@@ -1150,6 +1151,26 @@
         <member name="T:Blog.Core.Model.ViewModels.SidebarMenuViewModel">
             <summary>
             菜单展示model
+            </summary>
+        </member>
+        <member name="T:Blog.Core.Model.ViewModels.TestRestSharpGetDto">
+            <summary>
+            用来测试 RestSharp Get 请求
+            </summary>
+        </member>
+        <member name="P:Blog.Core.Model.ViewModels.TestRestSharpGetDto.success">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Blog.Core.Model.ViewModels.TestRestSharpGetDto.data">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Blog.Core.Model.ViewModels.TestRestSharpPostDto">
+            <summary>
+            用来测试 RestSharp Post 请求
             </summary>
         </member>
         <member name="T:Blog.Core.Model.ViewModels.TopgbViewModels">

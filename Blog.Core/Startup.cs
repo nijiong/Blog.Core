@@ -92,6 +92,7 @@ namespace Blog.Core
 
         }
 
+        // 注意在CreateDefaultBuilder中，添加Autofac服务工厂
         public void ConfigureContainer(ContainerBuilder builder)
         {
             var basePath = Microsoft.DotNet.PlatformAbstractions.ApplicationEnvironment.ApplicationBasePath;
@@ -138,17 +139,18 @@ namespace Blog.Core
 
                 builder.RegisterAssemblyTypes(assemblysServices)
                           .AsImplementedInterfaces()
-                          .InstancePerLifetimeScope()
+                          .InstancePerDependency()
                           .EnableInterfaceInterceptors()//引用Autofac.Extras.DynamicProxy;
-                                                        // 如果你想注入两个，就这么写  InterceptedBy(typeof(BlogCacheAOP), typeof(BlogLogAOP));
-                                                        // 如果想使用Redis缓存，请必须开启 redis 服务，端口号我的是6319，如果不一样还是无效，否则请使用memory缓存 BlogCacheAOP
                           .InterceptedBy(cacheType.ToArray());//允许将拦截器服务的列表分配给注册。 
                 #endregion
 
                 #region Repository.dll 注入，有对应接口
                 var repositoryDllFile = Path.Combine(basePath, "Blog.Core.Repository.dll");
                 var assemblysRepository = Assembly.LoadFrom(repositoryDllFile);
-                builder.RegisterAssemblyTypes(assemblysRepository).AsImplementedInterfaces();
+                builder.RegisterAssemblyTypes(assemblysRepository)
+                       .AsImplementedInterfaces()
+                       .InstancePerDependency()
+                    ;
             }
             catch (Exception ex)
             {
@@ -183,12 +185,14 @@ namespace Blog.Core
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBlogArticleServices _blogArticleServices, ILoggerFactory loggerFactory)
         {
 
-            //记录所有的访问记录
+            // 记录所有的访问记录
             loggerFactory.AddLog4Net();
-            //记录请求与返回数据 
+            // 记录请求与返回数据 
             app.UseReuestResponseLog();
             // signalr 
             app.UseSignalRSendMildd();
+            // 记录ip请求
+            app.UseIPLogMildd();
 
             #region Environment
             if (env.IsDevelopment())
@@ -234,10 +238,8 @@ namespace Blog.Core
 
 
             // ↓↓↓↓↓↓ 注意下边这些中间件的顺序，很重要 ↓↓↓↓↓↓
-            app.UseMiniProfiler();
 
             app.UseCors("LimitRequests");
-
 
             // 跳转https
             //app.UseHttpsRedirection();
@@ -255,6 +257,11 @@ namespace Blog.Core
             app.UseAuthentication();
             // 然后是授权中间件
             app.UseAuthorization();
+
+            // 开启异常中间件，要放到最后
+            //app.UseExceptionHandlerMidd();
+
+            app.UseMiniProfiler();
 
             app.UseEndpoints(endpoints =>
             {
