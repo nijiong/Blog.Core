@@ -1,16 +1,12 @@
 ﻿using SqlSugar;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Blog.Core.Model.Models
 {
     /// <summary>
     /// 用户跟角色关联表
     /// </summary>
-    public class UserRole : RootEntity
+    public class UserRole : UserRoleRoot<int>
     {
         public UserRole() { }
 
@@ -25,20 +21,12 @@ namespace Blog.Core.Model.Models
         }
 
 
-
         /// <summary>
         ///获取或设置是否禁用，逻辑上的删除，非物理删除
         /// </summary>
         [SugarColumn(IsNullable = true)]
         public bool? IsDeleted { get; set; }
-        /// <summary>
-        /// 用户ID
-        /// </summary>
-        public int UserId { get; set; }
-        /// <summary>
-        /// 角色ID
-        /// </summary>
-        public int RoleId { get; set; }
+       
         /// <summary>
         /// 创建ID
         /// </summary>
@@ -47,7 +35,7 @@ namespace Blog.Core.Model.Models
         /// <summary>
         /// 创建者
         /// </summary>
-        [SugarColumn(ColumnDataType ="nvarchar",Length = 50, IsNullable = true)]
+        [SugarColumn(Length = 50, IsNullable = true)]
         public string CreateBy { get; set; }
         /// <summary>
         /// 创建时间
@@ -62,7 +50,7 @@ namespace Blog.Core.Model.Models
         /// <summary>
         /// 修改者
         /// </summary>
-        [SugarColumn(ColumnDataType ="nvarchar",Length = 50, IsNullable = true)]
+        [SugarColumn(Length = 50, IsNullable = true)]
         public string ModifyBy { get; set; }
         /// <summary>
         /// 修改时间
